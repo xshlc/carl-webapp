@@ -1,5 +1,5 @@
 'use client'
-import { File, Shield, Upload } from 'lucide-react'
+import { File, Layout, Upload } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
@@ -8,9 +8,9 @@ function SideNav({ closeSideBar }) {
   const menuList = [
     {
       id: 1,
-      name: 'Upload',
-      icon: Upload,
-      path: '/upload',
+      name: 'Dashboard',
+      icon: Layout,
+      path: '/dashboard',
     },
     {
       id: 2,
@@ -20,9 +20,9 @@ function SideNav({ closeSideBar }) {
     },
     {
       id: 3,
-      name: 'Upgrade',
-      icon: Shield,
-      path: '/upgrade',
+      name: 'Upload',
+      icon: Upload,
+      path: '/upload',
     },
   ]
 

@@ -1,4 +1,82 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Next.js Basics
+
+React with a couple new rules:
+
+When naming folder (at least under /app), need to name it something like
+"`_component`" because next.js will treat folder as routers.
+
+JS file start with capital letter like "`Header.js`" for components
+
+### Optional:
+
+Install:
+
+1. `ES7+ React/Redux/React-Native` linter by `dsznajder`
+2. Tailwind CSS IntelliSense by Tailwind Labs
+
+Using default template
+
+```
+rfce
+```
+
+### UI Assets
+
+Swap out styles and assets by going to the official websites for the following
+libraries used:
+
+- Tailwind UI based library called **Hyper UI**
+- Logoipsum - dummy logos
+- Icons - Lucide.dev
+
+## Firebase Setup
+
+### Within Firebase on the browser
+
+1. Go to team firebase project
+2. Go to "Project Overview"
+3. Click on the "5 apps" (we have a total of 5 including the `carl_app` android
+   and ios, `now_ui_flutter`, etc.)
+4. Click on the GEAR ICON to the right of `</> carl_app (web)`
+   1. This should navigate to the `General` page.
+   2. Scroll all the way down
+   3. Under `SDK setup and config`, make sure `npm` is selected
+   4. Copy the initialization script
+
+### Within the web app
+
+1. Inside VS Code or terminal run `npm install firebase`
+2. Create a `firebaseConfig.js` file in the root directory of the project
+   1. What does this mean? If the project main folder is called `/carl-webapp`
+      then it goes inside it within folder nesting
+3. Paste the contents of the firebase initialization script
+   1. It should begin with something like
+      `// Import the functions you need from the SDKs you need`
+4. In JavaScript files, import objects as needed.
+
+Example:
+
+```js
+import { app } from '@/firebaseConfig'
+import {
+  getDownloadURL,
+  getStorage,
+  uploadBytesResumable,
+  ref,
+} from 'firebase/storage'
+import { getDatabase, set } from 'firebase/database'
+```
+
+**References:**
+
+- Firebase Documentation
+  - Database - https://firebase.google.com/docs/database/web/start
+  - Storage bucket - https://firebase.google.com/docs/storage/web/start
+
+---
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with
+[`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
@@ -14,23 +92,34 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the
+result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+You can start editing the page by modifying `app/page.js`. The page auto-updates
+as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+This project uses
+[`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to
+automatically optimize and load Inter, a custom Google Font.
 
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
+  features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+You can check out
+[the Next.js GitHub repository](https://github.com/vercel/next.js/) - your
+feedback and contributions are welcome!
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The easiest way to deploy your Next.js app is to use the
+[Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
+from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Check out our
+[Next.js deployment documentation](https://nextjs.org/docs/deployment) for more
+details.

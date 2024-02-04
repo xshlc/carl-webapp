@@ -26,12 +26,12 @@ function Upload() {
       // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
       console.log('Upload is ' + progress + '% done')
-      // setProgress(progress)
-      // progress == 100 &&
-      //   getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
-      //     console.log('File available at', downloadURL)
-      //     saveInfo(file, downloadURL)
-      //   })
+      setProgress(progress)
+      progress == 100 &&
+        getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+          console.log('File available at', downloadURL)
+          // saveInfo(file, downloadURL)
+        })
     })
   }
   return (
@@ -41,7 +41,10 @@ function Upload() {
         <strong className='text-primary'> Share</strong> it
       </h2>
       {/* <UploadForm uploadBtnClick={file => console.log(file)} /> */}
-      <UploadForm uploadBtnClick={file => uploadFile(file)} />
+      <UploadForm
+        uploadBtnClick={file => uploadFile(file)}
+        progress={progress}
+      />
     </div>
   )
 }
