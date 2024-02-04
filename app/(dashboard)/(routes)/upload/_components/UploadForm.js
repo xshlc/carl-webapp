@@ -3,7 +3,7 @@ import { useState } from 'react'
 import AlertMsg from './AlertMsg'
 import FilePreview from './FilePreview'
 
-function UploadForm() {
+function UploadForm({ uploadBtnClick }) {
   const [file, setFile] = useState()
   const [errorMsg, setErrorMsg] = useState()
   const onFileSelect = file => {
@@ -74,6 +74,7 @@ function UploadForm() {
       <button
         disabled={!file}
         className='p-2 bg-primary text-white w-[30%] rounded-full mt-5 disabled:bg-gray-400'
+        onClick={() => uploadBtnClick(file)}
       >
         Upload
       </button>
