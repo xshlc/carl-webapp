@@ -1,8 +1,21 @@
 import React from 'react'
 import { useState } from 'react'
+import AlertMsg from './AlertMsg'
+import FilePreview from './FilePreview'
 
 function UploadForm() {
   const [file, setFile] = useState()
+  const [errorMsg, setErrorMsg] = useState()
+  const onFileSelect = file => {
+    console.log(file)
+    if (file && file.size > 5000000) {
+      console.log('Size is greater than 5MB')
+      setErrorMsg('Maximum File Upload Size is 5MB')
+      return
+    }
+    setErrorMsg(null)
+    setFile(file)
+  }
   return (
     <div className='text-center'>
       <div className='flex items-center justify-center w-full'>
@@ -43,17 +56,21 @@ function UploadForm() {
               <strong className='text-primary'>drop</strong>
             </p>
             <p className='text-xs text-gray-500 dark:text-gray-400'>
-              SVG, PNG, JPG or GIF ( Max Size : 2MB)
+              SVG, PNG, JPG or GIF ( Max Size : 5MB)
             </p>
           </div>
           <input
             id='dropzone-file'
             type='file'
             className='hidden'
-            onChange={event => setFile(event.target.files[0])}
+            onChange={event => onFileSelect(event.target.files[0])}
           />
         </label>
       </div>
+      {errorMsg ? <AlertMsg msg={errorMsg} /> : null}
+      {file ? (
+        <FilePreview file={file} removeFile={() => setFile(null)} />
+      ) : null}
       <button
         disabled={!file}
         className='p-2 bg-primary text-white w-[30%] rounded-full mt-5 disabled:bg-gray-400'
