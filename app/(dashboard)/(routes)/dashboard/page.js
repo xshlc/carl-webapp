@@ -6,7 +6,7 @@ import Constant from '@/app/_utils/Constant'
 function Dashboard() {
   return (
     <div>
-      <h2 className='text-[23px] font-medium p-5'>My Courses:</h2>
+      <h2 className='text-[26px] font-medium p-5'>My Courses:</h2>
       <div
         className='grid grid-cols-1 sm:grid-cols-2
         md:grid-cols-3 lg:grid-cols-4 mt-5 gap-5 m-5'
