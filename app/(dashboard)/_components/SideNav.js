@@ -1,5 +1,5 @@
 'use client'
-import { File, Layout, Upload } from 'lucide-react'
+import { File, Layout, Upload, UserCog } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useState } from 'react'
@@ -23,6 +23,12 @@ function SideNav({ closeSideBar }) {
       name: 'Upload',
       icon: Upload,
       path: '/upload',
+    },
+    {
+      id: 4,
+      name: 'Manage Students',
+      icon: UserCog,
+      path: '/students',
     },
   ]
 
