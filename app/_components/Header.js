@@ -50,9 +50,9 @@ function Header() {
                 >
                   Get Started
                 </a>
-              </div> */}          //Commenting out "Get Started" button on top nav bar
+              </div> */}
 
-              {/* <button className='block rounded bg-gray-100 p-2.5 text-gray-600 transition hover:text-gray-600/75 md:hidden'>
+            {/* <button className='block rounded bg-gray-100 p-2.5 text-gray-600 transition hover:text-gray-600/75 md:hidden'>
                 <span className='sr-only'>Toggle menu</span>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
@@ -69,7 +69,7 @@ function Header() {
                   />
                 </svg>
               </button> */}
-            {/* </div> */}        //Commenting out "Get Started" button on top nav bar        
+            {/* </div> */}
           </div>
         </div>
       </header>
