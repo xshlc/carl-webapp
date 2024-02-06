@@ -48,7 +48,7 @@ libraries used:
 1. Inside VS Code or terminal run `npm install firebase`
 2. Create a `firebaseConfig.js` file in the root directory of the project
    1. What does this mean? If the project main folder is called `/carl-webapp`
-      then it goes inside it within folder nesting
+      then it goes inside it, WITHOUT any folder nesting
 3. Paste the contents of the firebase initialization script
    1. It should begin with something like
       `// Import the functions you need from the SDKs you need`
