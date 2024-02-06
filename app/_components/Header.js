@@ -42,7 +42,7 @@ function Header() {
               </ul>
             </nav>
 
-            <div className='flex items-center gap-4'>
+            {/* <div className='flex items-center gap-4'>
               <div className='sm:flex sm:gap-4'>
                 <a
                   className='block rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700'
@@ -50,7 +50,7 @@ function Header() {
                 >
                   Get Started
                 </a>
-              </div>
+              </div> */}          //Commenting out "Get Started" button on top nav bar
 
               {/* <button className='block rounded bg-gray-100 p-2.5 text-gray-600 transition hover:text-gray-600/75 md:hidden'>
                 <span className='sr-only'>Toggle menu</span>
@@ -69,7 +69,7 @@ function Header() {
                   />
                 </svg>
               </button> */}
-            </div>
+            {/* </div> */}        //Commenting out "Get Started" button on top nav bar        
           </div>
         </div>
       </header>
