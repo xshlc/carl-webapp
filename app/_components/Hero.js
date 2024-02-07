@@ -8,8 +8,8 @@ function Hero() {
         <div className='mx-auto max-w-screen-xl px-4 py-32 lg:flex'>
           <div className='mx-auto max-w-xl text-center'>
             <h1 className='text-3xl font-extrabold sm:text-5xl'>
-              <span className='text-primary'>CARL.ai{'\n'}</span>
-              Teacher Dashboard
+              <span className='text-primary'>CARL{'\n'}</span> 
+              <span className='text-secondary text-black'>Teacher Dashboard</span>
             </h1>
 
             <p className='mt-4 sm:text-xl/relaxed text-gray-700'>
