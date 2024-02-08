@@ -24,7 +24,7 @@ function CourseSelect({ onSelectCourse }) {
         value={selectedCourse}
         onChange={handleChange}
       >
-        <option selected>Choose a course</option>
+        <option value=''>Choose a course</option>
         {Constant.courseList.map(item => (
           <option key={item.id} value={item.id}>
             {item.name}
