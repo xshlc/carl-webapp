@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Constant from '@/app/_utils/Constant'
 import StudentsTable from './_components/StudentsTable'
 import CourseSelect from './_components/CourseSelect'
@@ -15,26 +15,27 @@ import app from 'firebaseConfig.js'
 function Students() {
   const [selectedCourse, setSelectedCourse] = useState('')
   const [selectedStudents, setSelectedStudents] = useState([])
+  const [studentsList, setStudentsList] = useState([])
 
   const db = getFirestore(app)
 
-  const getStudentsList = async () => {
-    try {
-      const collectionPath = 'Student'
-      const querySnapshot = await getDocs(collection(db, collectionPath))
-
-      const studentsList = []
-      querySnapshot.forEach(doc => {
-        studentsList.push(doc.data())
-      })
-
-      console.log('Students List:', studentsList)
-      return studentsList
-    } catch (error) {
-      console.error('Error fetching students list:', error)
-      throw error
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const collectionPath = 'Student'
+        const querySnapshot = await getDocs(collection(db, collectionPath))
+        const studentsList = []
+        querySnapshot.forEach(doc => {
+          studentsList.push(doc.data())
+        })
+        setStudentsList(studentsList)
+        console.log('Students:', studentsList)
+      } catch (error) {
+        console.error('Error fetching students list:', error)
+      }
     }
-  }
+    fetchStudents()
+  }, [db])
 
   const handleSelectCourse = courseId => {
     setSelectedCourse(courseId)
@@ -48,7 +49,6 @@ function Students() {
 
   const handleAddStudentsClick = () => {
     console.log('Selected students:', selectedStudents)
-    getStudentsList()
     // Add logic to handle adding students
   }
 
@@ -60,7 +60,10 @@ function Students() {
         <CourseSelect onSelectCourse={handleSelectCourse} />
       </div>
       <div className='pl-10 pr-10 pt-5'>
-        <StudentsTable onSelectStudents={setSelectedStudents} />
+        <StudentsTable
+          students={studentsList}
+          onSelectStudents={handleAddStudentsClick}
+        />
       </div>
 
       <div
