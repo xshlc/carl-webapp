@@ -29,6 +29,7 @@ function ManageCourse({ params }) {
         decodedCourseName,
       )
       const docSnap = await getDoc(docRef)
+      console.log(docSnap.data())
       const courseStudents = docSnap.data()['course-students']
 
       const studentsData = []
