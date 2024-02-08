@@ -23,7 +23,7 @@ function Header() {
                 <li>
                   <a
                     className='text-gray-500 transition hover:text-gray-500/75'
-                    href='/dashboard'
+                    href='/courses'
                   >
                     {' '}
                     Courses{' '}
@@ -46,9 +46,9 @@ function Header() {
               <div className='sm:flex sm:gap-4'>
                 <a
                   className='block rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700'
-                  href='/dashboard'
+                  href='/courses'
                 >
-                  Get Started
+                  Login
                 </a>
               </div> */}
 

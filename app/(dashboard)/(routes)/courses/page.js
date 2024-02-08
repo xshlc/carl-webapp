@@ -3,7 +3,7 @@ import React from 'react'
 import Link from 'next/link'
 import Constant from '@/app/_utils/Constant'
 
-function Dashboard() {
+function Courses() {
   return (
     <div>
       <h2 className='text-[26px] font-medium p-5'>My Courses:</h2>
@@ -17,7 +17,7 @@ function Dashboard() {
              cursor-pointer hover:border-purple-500'
             key={index}
           >
-            <Link href='/dashboard/[id]' as={`/dashboard/${item.id}`}>
+            <Link href='/courses/[name]' as={`/courses/${item.name}`}>
               {item.name}
             </Link>
           </div>
@@ -27,4 +27,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default Courses

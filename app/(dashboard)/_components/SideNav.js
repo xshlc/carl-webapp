@@ -8,9 +8,9 @@ function SideNav({ closeSideBar }) {
   const menuList = [
     {
       id: 1,
-      name: 'Dashboard',
+      name: 'Courses',
       icon: Layout,
-      path: '/dashboard',
+      path: '/courses',
     },
     {
       id: 2,
@@ -20,12 +20,6 @@ function SideNav({ closeSideBar }) {
     },
     {
       id: 3,
-      name: 'Upload',
-      icon: Upload,
-      path: '/upload',
-    },
-    {
-      id: 4,
       name: 'Manage Students',
       icon: UserCog,
       path: '/students',
