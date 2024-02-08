@@ -3,10 +3,38 @@ import React, { useState } from 'react'
 import Constant from '@/app/_utils/Constant'
 import StudentsTable from './_components/StudentsTable'
 import CourseSelect from './_components/CourseSelect'
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  getDocs,
+  collection,
+} from 'firebase/firestore'
+import app from 'firebaseConfig.js'
 
 function Students() {
   const [selectedCourse, setSelectedCourse] = useState('')
   const [selectedStudents, setSelectedStudents] = useState([])
+
+  const db = getFirestore(app)
+
+  const getStudentsList = async () => {
+    try {
+      const collectionPath = 'Student'
+      const querySnapshot = await getDocs(collection(db, collectionPath))
+
+      const studentsList = []
+      querySnapshot.forEach(doc => {
+        studentsList.push(doc.data())
+      })
+
+      console.log('Students List:', studentsList)
+      return studentsList
+    } catch (error) {
+      console.error('Error fetching students list:', error)
+      throw error
+    }
+  }
 
   const handleSelectCourse = courseId => {
     setSelectedCourse(courseId)
@@ -20,6 +48,7 @@ function Students() {
 
   const handleAddStudentsClick = () => {
     console.log('Selected students:', selectedStudents)
+    getStudentsList()
     // Add logic to handle adding students
   }
 
