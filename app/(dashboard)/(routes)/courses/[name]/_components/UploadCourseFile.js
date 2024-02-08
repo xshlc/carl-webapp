@@ -12,7 +12,7 @@ import {
 import { getDatabase, push, set } from 'firebase/database'
 import { getFirestore, doc, setDoc } from 'firebase/firestore'
 
-function UploadCourseFile({course}) {
+function UploadCourseFile({ course }) {
   const [progress, setProgress] = useState()
   const db = getFirestore(app)
   const storage = getStorage(app)
@@ -39,22 +39,19 @@ function UploadCourseFile({course}) {
   const saveInfo = async (file, fileUrl) => {
     const docId = Date.now().toString()
     const collectionPath = `/Instructor/TestInstructor/Class/${course}/Material`
-    await setDoc(
-      doc(db, collectionPath, docId),
-      {
-        fileName: file.name,
-        fileSize: file.size,
-        fileType: file.type,
-        fileUrl: fileUrl,
-      },
-    )
+    await setDoc(doc(db, collectionPath, docId), {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      fileUrl: fileUrl,
+    })
   }
   return (
     <div className='p-5 px-8 md:px-28'>
-      <h2 className='text-[20px] text-center m-5'>
+      {/* <h2 className='text-[20px] text-center m-5'>
         Start <strong className='text-primary'>Uploading</strong> Files and
         <strong className='text-primary'> Share</strong> it
-      </h2>
+      </h2> */}
       {/* <UploadForm uploadBtnClick={file => console.log(file)} /> */}
       <UploadForm
         uploadBtnClick={file => uploadFile(file)}
