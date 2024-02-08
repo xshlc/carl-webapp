@@ -2,19 +2,23 @@ export default {
   desc: 'Classroom Assistant Real-Time LLM Tool',
   courseList: [
     {
-      id: 1,
+      index: 1,
+      id: 'CMPEN270',
       name: 'CMPEN 270',
     },
     {
-      id: 2,
+      index: 2,
+      id: 'EE211',
       name: 'EE 211',
     },
     {
-      id: 3,
+      index: 3,
+      id: 'SWENG411',
       name: 'SWENG 411',
     },
     {
-      id: 4,
+      index: 4,
+      id: 'CMPSC465',
       name: 'CMPSC 465',
     },
   ],

@@ -15,8 +15,11 @@ function Dashboard() {
           <div
             className='border rounded-lg p-5
              cursor-pointer hover:border-purple-500'
+            key={index}
           >
-            <h2>{item.name}</h2>
+            <Link href='/dashboard/[id]' as={`/dashboard/${item.id}`}>
+              {item.name}
+            </Link>
           </div>
         ))}
       </div>
