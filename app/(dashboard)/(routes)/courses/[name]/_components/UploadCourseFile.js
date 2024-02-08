@@ -1,7 +1,8 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import UploadForm from './UploadForm'
+import CompleteCheck from './CompleteCheck'
 import { app } from '@/firebaseConfig'
 import {
   getDownloadURL,
@@ -9,11 +10,14 @@ import {
   uploadBytesResumable,
   ref,
 } from 'firebase/storage'
-import { getDatabase, push, set } from 'firebase/database'
 import { getFirestore, doc, setDoc } from 'firebase/firestore'
+import { useRouter } from 'next/navigation'
 
-function UploadCourseFile({course}) {
+function UploadCourseFile({ course }) {
+  const router = useRouter()
   const [progress, setProgress] = useState()
+  const [uploadCompleted, setUploadCompleted] = useState(false)
+  const [fileDocId, setFileDocId] = useState()
   const db = getFirestore(app)
   const storage = getStorage(app)
 
@@ -39,27 +43,57 @@ function UploadCourseFile({course}) {
   const saveInfo = async (file, fileUrl) => {
     const docId = Date.now().toString()
     const collectionPath = `/Instructor/TestInstructor/Class/${course}/Material`
-    await setDoc(
-      doc(db, collectionPath, docId),
-      {
-        fileName: file.name,
-        fileSize: file.size,
-        fileType: file.type,
-        fileUrl: fileUrl,
-      },
-    )
+    setFileDocId(docId)
+    await setDoc(doc(db, collectionPath, docId), {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      fileUrl: fileUrl,
+    })
   }
+
+  useEffect(() => {
+    console.log('Trigger')
+
+    progress == 100 &&
+      setTimeout(() => {
+        setUploadCompleted(true)
+      }, 2000)
+  }, [progress == 100])
+
+  useEffect(() => {
+    uploadCompleted &&
+      setTimeout(() => {
+        setUploadCompleted(false)
+        console.log('FileDocId', fileDocId)
+        router.push('/file-preview/' + fileDocId)
+      }, 2000)
+  }, [uploadCompleted == true])
   return (
-    <div className='p-5 px-8 md:px-28'>
+    <div className='p-5 px-8 md:px-28 text-center'>
       <h2 className='text-[20px] text-center m-5'>
-        Start <strong className='text-primary'>Uploading</strong> Files and
-        <strong className='text-primary'> Share</strong> it
+        <strong className='text-primary'>Upload</strong> Your{' '}
+        <strong className='text-primary'>{course}</strong> Files
       </h2>
-      {/* <UploadForm uploadBtnClick={file => console.log(file)} /> */}
       <UploadForm
         uploadBtnClick={file => uploadFile(file)}
         progress={progress}
       />
+      {/* {!uploadCompleted ? (
+        <div>
+          <h2 className='text-[20px] text-center m-5'>
+            Start
+            <strong className='text-primary'> Uploading </strong>
+            File and <strong className='text-primary'> Share</strong> it
+          </h2>
+          <UploadForm
+            uploadBtnClick={file => uploadFile(file)}
+            progress={progress}
+          />
+        </div>
+      ) : (
+        <CompleteCheck />
+      )} */}
     </div>
   )
 }

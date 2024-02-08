@@ -4,6 +4,12 @@ import Link from 'next/link'
 import Constant from '@/app/_utils/Constant'
 
 function Courses() {
+  const handleCurrentCourseUpdate = name => {
+    Constant.currentCourse = name
+  }
+  const handleClick = name => () => {
+    handleCurrentCourseUpdate(name)
+  }
   return (
     <div>
       <h2 className='text-[26px] font-medium p-5'>My Courses:</h2>
@@ -17,7 +23,11 @@ function Courses() {
              cursor-pointer hover:border-purple-500'
             key={index}
           >
-            <Link href='/courses/[name]' as={`/courses/${item.name}`}>
+            <Link
+              href='/courses/[name]'
+              as={`/courses/${item.name}`}
+              onClick={handleClick(item.name)}
+            >
               {item.name}
             </Link>
           </div>

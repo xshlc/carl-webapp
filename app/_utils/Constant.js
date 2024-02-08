@@ -39,4 +39,5 @@ export default {
       courses: ['SWENG 411'],
     },
   ],
+  currentCourse: ''
 }
