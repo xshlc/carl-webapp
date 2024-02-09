@@ -13,7 +13,6 @@ function Courses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const db = getFirestore() // Assuming `app` is initialized elsewhere
         const classCollectionRef = collection(
           db,
           'Instructor',

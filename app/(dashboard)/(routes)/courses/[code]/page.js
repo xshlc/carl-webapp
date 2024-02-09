@@ -13,7 +13,7 @@ import {
 } from 'firebase/firestore'
 
 function ManageCourse({ params }) {
-  const decodedCourseName = decodeURIComponent(params.name)
+  const decodedCourseName = decodeURIComponent(params.code)
   console.log({ params })
 
   const [studentsList, setStudentsList] = useState([])
@@ -28,7 +28,11 @@ function ManageCourse({ params }) {
         'Class',
         decodedCourseName,
       )
+
       const docSnap = await getDoc(docRef)
+      if (docSnap.exists()) {
+        console.log('doc exists')
+      }
       console.log(docSnap.data())
       const courseStudents = docSnap.data()['course-students']
 
