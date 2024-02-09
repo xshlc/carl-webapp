@@ -10,7 +10,7 @@ import {
   getDocs,
   collection,
 } from 'firebase/firestore'
-import app from 'firebaseConfig.js'
+import { app } from '@/firebaseConfig.js'
 
 function Students() {
   const [selectedCourse, setSelectedCourse] = useState('')

@@ -2,6 +2,7 @@
 import React from 'react'
 import UploadCourseFile from './_components/UploadCourseFile'
 import EnrolledStudents from './_components/EnrolledStudents'
+import { app } from '@/firebaseConfig.js'
 import { useState, useEffect } from 'react'
 import {
   getFirestore,
@@ -10,7 +11,6 @@ import {
   getDocs,
   collection,
 } from 'firebase/firestore'
-import app from '@/firebaseConfig.js'
 
 function ManageCourse({ params }) {
   const decodedCourseName = decodeURIComponent(params.name)
@@ -49,7 +49,7 @@ function ManageCourse({ params }) {
   return (
     <div>
       <div className='flex flex-col items-center justify-center'>
-        <h2 className='text-[26px] font-medium pl-10 m-5'>
+        <h2 className='text-[26px] font-medium pl-10'>
           <strong>Manage Course</strong>
           <div className='text-primary pt-2 text-4xl'>{decodedCourseName}</div>
         </h2>

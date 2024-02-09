@@ -2,7 +2,7 @@
 import React from 'react'
 import { useState } from 'react'
 import UploadForm from './UploadForm'
-import { app } from '@/firebaseConfig'
+import { app } from '@/firebaseConfig.js'
 import {
   getDownloadURL,
   getStorage,
