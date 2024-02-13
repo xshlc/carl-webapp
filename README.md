@@ -46,13 +46,12 @@ libraries used:
 ### Within the web app
 
 1. Inside VS Code or terminal run `npm install firebase`
-2. Create a `firebaseConfig.js` file in the root directory of the project
-   1. What does this mean? If the project main folder is called `/carl-webapp`
-      then it goes inside it, WITHOUT any folder nesting
-3. Paste the contents of the firebase initialization script
-   1. It should begin with something like
-      `// Import the functions you need from the SDKs you need`
-4. In JavaScript files, import objects as needed.
+2. Create a `next.config.js` file in the root directory of the project
+3. Define all environment variables inside the `next.config.js` to be referenced by `firebaseConfig.js`
+   1. Environment variables values are provided by Firebase in the settings of `carl_app (web)`
+
+### Using Firebase in the code
+In JavaScript files, import objects as needed.
 
 Example:
 
