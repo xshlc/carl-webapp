@@ -1,34 +1,3 @@
-## Next.js Basics
-
-React with a couple new rules:
-
-When naming folder (at least under /app), need to name it something like
-"`_component`" because next.js will treat folder as routers.
-
-JS file start with capital letter like "`Header.js`" for components
-
-### Optional:
-
-Install:
-
-1. `ES7+ React/Redux/React-Native` linter by `dsznajder`
-2. Tailwind CSS IntelliSense by Tailwind Labs
-
-Using default template
-
-```
-rfce
-```
-
-### UI Assets
-
-Swap out styles and assets by going to the official websites for the following
-libraries used:
-
-- Tailwind UI based library called **Hyper UI**
-- Logoipsum - dummy logos
-- Icons - Lucide.dev
-
 ## Firebase Setup
 
 ### Within Firebase on the browser
@@ -71,6 +40,38 @@ import { getDatabase, set } from 'firebase/database'
 - Firebase Documentation
   - Database - https://firebase.google.com/docs/database/web/start
   - Storage bucket - https://firebase.google.com/docs/storage/web/start
+
+---
+## Next.js Basics
+
+React with a couple new rules:
+
+When naming folder (at least under /app), need to name it something like
+"`_component`" because next.js will treat folder as routers.
+
+JS file start with capital letter like "`Header.js`" for components
+
+### Optional:
+
+Install:
+
+1. `ES7+ React/Redux/React-Native` linter by `dsznajder`
+2. Tailwind CSS IntelliSense by Tailwind Labs
+
+Using default template
+
+```
+rfce
+```
+
+### UI Assets
+
+Swap out styles and assets by going to the official websites for the following
+libraries used:
+
+- Tailwind UI based library called **Hyper UI**
+- Logoipsum - dummy logos
+- Icons - Lucide.dev
 
 ---
 
