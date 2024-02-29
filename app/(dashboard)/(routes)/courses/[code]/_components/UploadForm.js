@@ -11,6 +11,7 @@ function UploadForm({ uploadBtnClick, progress }) {
     console.log(file)
     if (file && file.size > 5000000) {
       console.log('Size is greater than 5MB')
+      // @ts-ignore
       setErrorMsg('Maximum File Upload Size is 5MB')
       return
     }

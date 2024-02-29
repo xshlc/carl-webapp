@@ -14,6 +14,7 @@ import { getFirestore, doc, setDoc } from 'firebase/firestore'
 
 function UploadCourseFile({ course }) {
   const [progress, setProgress] = useState()
+  const [result, setResult] = useState('')
   const db = getFirestore(app)
   const storage = getStorage(app)
 
@@ -27,13 +28,31 @@ function UploadCourseFile({ course }) {
       // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
       console.log('Upload is ' + progress + '% done')
+      // @ts-ignore
       setProgress(progress)
       progress == 100 &&
-        getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
-          console.log('File available at', downloadURL)
-          saveInfo(file, downloadURL)
-        })
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then(downloadURL => {
+            console.log('File available at', downloadURL)
+            saveInfo(file, downloadURL)
+            vectorizeAndSaveFile(downloadURL)
+          })
+          .catch(error => console.log('Error getting download URL:', error))
     })
+  }
+
+  const vectorizeAndSaveFile = async fileUrl => {
+    try {
+      // send fileUrl to an api endpoint
+      const result = await fetch('../../../../../api/test', {
+        method: 'POST',
+        body: JSON.stringify({ fileUrl }),
+      })
+      const json = await result.json()
+      console.log('result: ', json)
+    } catch (err) {
+      console.log('err:', err)
+    }
   }
 
   const saveInfo = async (file, fileUrl) => {
