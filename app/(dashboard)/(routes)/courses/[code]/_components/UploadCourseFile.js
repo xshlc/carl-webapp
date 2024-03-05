@@ -44,8 +44,11 @@ function UploadCourseFile({ course }) {
   const vectorizeAndSaveFile = async fileUrl => {
     try {
       // send fileUrl to an api endpoint
-      const result = await fetch('../../../../../api/test', {
+      const result = await fetch('/api/test', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ fileUrl }),
       })
       const json = await result.json()
