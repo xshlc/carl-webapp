@@ -23,89 +23,40 @@ const upload = multer({ dest: 'uploads/' })
 // export default async function handler(req, res) {
 //   try {
 //     if (req.method === 'POST') {
-//       upload.single('file')(req, res, async err => {
-//         if (err) {
-//           return res.status(400).json({ message: 'Error uploading file' })
-//         }
-
-//         const file = req.file
-//         const { originalname, filename } = file
-
-//         // Handle the file as needed
-//         console.log('Uploaded file:', originalname)
-
-//         // Construct the relative path to the temp folder inside the public directory
-//         const tempFilePath = path.join('temp', filename)
-
-//         // Pass the relative file path to the DirectoryLoader
-//         const loader = new DirectoryLoader(tempFilePath, {
-//           '.txt': path => new TextLoader(path),
-//           '.md': path => new TextLoader(path),
-//           '.pdf': path => new PDFLoader(path),
-//           '.png': path => new UnstructuredLoader(path),
-//           '.jpg': path => new UnstructuredLoader(path),
-//         })
-
-//         const docs = await loader.load()
-//         const vectorDimensions = 1536
-
-//         const client = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
-
-//         // Create Pinecone index and update with docs
-//         await createPineconeIndex(client, indexName, vectorDimensions)
-//         await updatePinecone(client, indexName, docs)
-
-//         // Respond with success message
-//         res
-//           .status(200)
-//           .json('Successfully created index and loaded data into Pinecone.')
-//       })
-//     } else {
-//       // If the request method is not POST, send a 405 Method Not Allowed status
-//       res.setHeader('Allow', ['POST'])
-//       res.status(405).end(`Method ${req.method} Not Allowed`)
-//     }
-//   } catch (error) {
-//     console.error('Error processing file:', error)
-//     res.status(500).json({ message: 'Internal server error' })
-//   }
-// }
-
-// export default async function handler(req, res) {
-//   try {
-//     if (req.method === 'POST') {
-//       // Get the file from the 'temp' folder
-//       const tempDir = path.join(process.cwd(), 'public', 'temp')
-//       const file = req.body.file
-//       const filePath = path.join(tempDir, file)
-
-//       // Check if the file exists
-//       if (!fs.existsSync(filePath)) {
-//         return res.status(400).json({ message: 'File not found' })
+//       console.log('req.body:', req.body)
+//       console.log('req.file:', req.file)
+//       // Check if the request contains a file
+//       if (!req.file) {
+//         console.error('No file uploaded HERE')
+//         return res.status(400).json({ message: 'No file uploaded' })
 //       }
 
-//       // Load the file using the appropriate loader
-//       const loader = new DirectoryLoader(filePath, {
-//         '.txt': path => new TextLoader(path),
-//         '.md': path => new TextLoader(path),
-//         '.pdf': path => new PDFLoader(path),
-//         '.png': path => new UnstructuredLoader(path),
-//         '.jpg': path => new UnstructuredLoader(path),
-//       })
+//       // Get the temporary file path
+//       const tempFilePath = req.file.path
+//       console.log('Temporary file path:', tempFilePath)
 
-//       const docs = await loader.load()
-//       const vectorDimensions = 1536
+//       // Construct the absolute file path relative to the server's root directory
+//       const filePath = path.join(
+//         process.cwd(),
+//         'public',
+//         'temp',
+//         req.file.originalname,
+//       )
+//       console.log('Absolute file path:', filePath)
 
-//       const client = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
+//       // Move the file to the desired location
+//       fs.renameSync(tempFilePath, filePath)
 
-//       // Create Pinecone index and update with docs
-//       await createPineconeIndex(client, indexName, vectorDimensions)
-//       await updatePinecone(client, indexName, docs)
+//       // Log the absolute file path for debugging
+//       console.log('Absolute file path:', filePath)
+
+//       // Proceed with any further processing here
+//       // For example, you can call a function to vectorize and save the file to the Pinecone database
+//       // createPineconeIndex(client, indexName, vectorDimension);
+//       // updatePinecone(client, indexName, docs)
 
 //       // Respond with success message
-//       res
-//         .status(200)
-//         .json('Successfully created index and loaded data into Pinecone.')
+//       res.status(200).json({ message: 'File uploaded successfully', filePath })
 //     } else {
 //       // If the request method is not POST, send a 405 Method Not Allowed status
 //       res.setHeader('Allow', ['POST'])
@@ -120,23 +71,27 @@ const upload = multer({ dest: 'uploads/' })
 export default async function handler(req, res) {
   try {
     if (req.method === 'POST') {
-      // Get the direct file path from the request body
-      const filePath = req.body.filePath // Assuming the client sends the file path
+      const { filePath } = req.body // Assuming the client sends the file path
 
-      // Check if the file exists
-      if (!fs.existsSync(filePath)) {
+      // Construct the absolute file path relative to the server's root directory
+      const absoluteFilePath = path.join(
+        process.cwd(),
+        'public',
+        'temp',
+        filePath,
+      )
+
+      // Check if the file exists at the specified path
+      if (!fs.existsSync(absoluteFilePath)) {
         return res.status(400).json({ message: 'File not found' })
       }
 
-      // Load the file using the TextLoader
-      const loader = new TextLoader(filePath)
-
       // Load the file content
-      const textContent = fs.readFileSync(filePath, 'utf-8')
+      const textContent = fs.readFileSync(absoluteFilePath, 'utf-8')
 
       // Create a single document with the file content
       const doc = {
-        metadata: { source: filePath },
+        metadata: { source: absoluteFilePath },
         pageContent: textContent,
       }
 
@@ -149,17 +104,15 @@ export default async function handler(req, res) {
       await updatePinecone(client, indexName, [doc])
 
       // Respond with success message
-      res
-        .status(200)
-        .json('Successfully created index and loaded data into Pinecone.')
+      return res.status(200).json({ message: 'File uploaded successfully' })
     } else {
       // If the request method is not POST, send a 405 Method Not Allowed status
       res.setHeader('Allow', ['POST'])
-      res.status(405).end(`Method ${req.method} Not Allowed`)
+      return res.status(405).end(`Method ${req.method} Not Allowed`)
     }
   } catch (error) {
     console.error('Error processing file:', error)
-    res.status(500).json({ message: 'Internal server error' })
+    return res.status(500).json({ message: 'Internal server error' })
   }
 }
 
