@@ -15,10 +15,31 @@ import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
 // @ts-ignore
 //import { NextApiRequest, NextApiResponse } from 'next'
 import multer from 'multer'
-import fs from 'fs'
+//import fs from 'fs'
+import fs from 'fs/promises'
 import path from 'path'
+import { formidable } from 'formidable'
 
 const upload = multer({ dest: 'uploads/' })
+
+const readFile = (req, saveLocally) => {
+  const options = {}
+  if (saveLocally) {
+    //boolean
+    options.uploadDir = path.join(process.cwd(), '/public/images')
+    options.filename = (name, ext, path, form) => {
+      return Date.now().toString() + '_' + path.originalFilename
+    }
+  }
+  options.maxFileSize = 4000 * 1024 * 1024
+  const form = formidable(options)
+  return new Promise((resolve, reject) => {
+    form.parse(req, (err, fields, files) => {
+      if (err) reject(err)
+      resolve({ fields, files })
+    })
+  })
+}
 
 export default async function handler(req, res) {
   const loader = new DirectoryLoader('./public/temp', {
@@ -35,29 +56,23 @@ export default async function handler(req, res) {
   const client = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
   try {
     if (req.method === 'POST') {
-      upload.single('file')(req, res, async function (err) {
-        if (err instanceof multer.MulterError) {
-          // A Multer error occurred when uploading.
-          console.error('Multer error:', err)
-          return res.status(400).json({ message: 'File upload failed' })
-        } else if (err) {
-          // An unknown error occurred when uploading.
-          console.error('Unknown error:', err)
-          return res.status(500).json({ message: 'Internal server error' })
-        }
+      try {
+        await fs.readdir(path.join(process.cwd() + '/public', '/images'))
+      } catch (error) {
+        await fs.mkdir(path.join(process.cwd() + '/public', '/images'))
+      }
+      await readFile(req, true)
+      res.json({ done: 'ok' })
+      //console.log('File uploaded:', req.file)
 
-        // File was uploaded successfully
-        console.log('File uploaded:', req.file)
+      const vectorDimensions = 1536
 
-        const vectorDimensions = 1536
+      // Create Pinecone index and update with the document
+      //await createPineconeIndex(client, indexName, vectorDimensions)
+      //await updatePinecone(client, indexName, doc)
 
-        // Create Pinecone index and update with the document
-        //await createPineconeIndex(client, indexName, vectorDimensions)
-        //await updatePinecone(client, indexName, doc)
-
-        // Respond with success message
-        return res.status(200).json({ message: 'File uploaded successfully' })
-      })
+      // Respond with success message
+      return res.status(200).json({ message: 'File uploaded successfully' })
     } else {
       // If the request method is not POST, send a 405 Method Not Allowed status
       res.setHeader('Allow', ['POST'])

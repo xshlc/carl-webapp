@@ -28,6 +28,7 @@ function UploadCourseFile({ course }) {
     const metadata = {
       contentType: file.type,
     }
+    console.log(file)
     const storageRef = ref(storage, 'file-upload/' + file?.name)
     const uploadTask = uploadBytesResumable(storageRef, file, metadata)
     uploadTask.on('state_changed', snapshot => {
@@ -59,10 +60,10 @@ function UploadCourseFile({ course }) {
         method: 'POST',
         body: formData,
         // Multipart: Boundary not found
-        headers: {
-          // necessary headers
-          'Content-Type': 'multipart/form-data',
-        },
+        // headers: {
+        //   // necessary headers
+        //   'Content-Type': 'multipart/form-data',
+        // },
       })
 
       // const response = await axios.post('/api/test', formData, {
@@ -70,7 +71,6 @@ function UploadCourseFile({ course }) {
       //     'Content-Type': 'multipart/form-data',
       //   },
       // })
-
       const json = await result.json()
       console.log('result:', json)
       //console.log('result:', response.data)
