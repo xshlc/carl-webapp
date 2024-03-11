@@ -65,7 +65,7 @@ function UploadCourseFile({ course }) {
 
           // Save the file to a temporary folder inside the public directory
           const tempFilePath = '/temp/' + file.name
-
+          console.log(tempFilePath)
           saveInfo(file, downloadURL)
           vectorizeAndSaveFile(tempFilePath)
         } catch (error) {
@@ -75,38 +75,6 @@ function UploadCourseFile({ course }) {
     })
   }
 
-  // const vectorizeAndSaveFile = async file => {
-  //   try {
-  //     const formData = new FormData()
-  //     formData.append('file', file)
-
-  //     const result = await fetch('/api/test', {
-  //       method: 'POST',
-  //       body: formData,
-  //     })
-
-  //     const json = await result.json()
-  //     console.log('result: ', json)
-  //   } catch (err) {
-  //     console.log('err:', err)
-  //   }
-  // }
-  // const vectorizeAndSaveFile = async tempFilePath => {
-  //   try {
-  //     const formData = new FormData()
-  //     formData.append('file', tempFilePath)
-
-  //     const result = await fetch('/api/test', {
-  //       method: 'POST',
-  //       body: formData,
-  //     })
-
-  //     const json = await result.json()
-  //     console.log('result: ', json)
-  //   } catch (err) {
-  //     console.log('err:', err)
-  //   }
-  // }
   const vectorizeAndSaveFile = async tempFilePath => {
     try {
       const formData = new FormData()

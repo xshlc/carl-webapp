@@ -20,31 +20,6 @@ import path from 'path'
 
 const upload = multer({ dest: 'uploads/' })
 
-// Define a handler for your API route
-// export default async function handler(req, res) {
-//   try {
-//     // Check if the request method is POST
-//     if (req.method === 'POST') {
-//       // Extract the file URL from the request body
-//       const { fileUrl } = req.body
-//       console.log(fileUrl)
-
-//       // Here, you can add your logic to process the fileUrl
-//       // For example, generating embeddings and storing them
-
-//       // Send a success response
-//       res.status(200).json({ fileUrl })
-//     } else {
-//       // If the request method is not POST, send a 405 Method Not Allowed status
-//       res.setHeader('Allow', ['POST'])
-//       res.status(405).end(`Method ${req.method} Not Allowed`)
-//     }
-//   } catch (error) {
-//     console.error('Error processing file:', error)
-//     res.status(500).json({ error: 'Internal Server Error' })
-//   }
-// }
-
 // export default async function handler(req, res) {
 //   try {
 //     if (req.method === 'POST') {
@@ -96,36 +71,82 @@ const upload = multer({ dest: 'uploads/' })
 //   }
 // }
 
+// export default async function handler(req, res) {
+//   try {
+//     if (req.method === 'POST') {
+//       // Get the file from the 'temp' folder
+//       const tempDir = path.join(process.cwd(), 'public', 'temp')
+//       const file = req.body.file
+//       const filePath = path.join(tempDir, file)
+
+//       // Check if the file exists
+//       if (!fs.existsSync(filePath)) {
+//         return res.status(400).json({ message: 'File not found' })
+//       }
+
+//       // Load the file using the appropriate loader
+//       const loader = new DirectoryLoader(filePath, {
+//         '.txt': path => new TextLoader(path),
+//         '.md': path => new TextLoader(path),
+//         '.pdf': path => new PDFLoader(path),
+//         '.png': path => new UnstructuredLoader(path),
+//         '.jpg': path => new UnstructuredLoader(path),
+//       })
+
+//       const docs = await loader.load()
+//       const vectorDimensions = 1536
+
+//       const client = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
+
+//       // Create Pinecone index and update with docs
+//       await createPineconeIndex(client, indexName, vectorDimensions)
+//       await updatePinecone(client, indexName, docs)
+
+//       // Respond with success message
+//       res
+//         .status(200)
+//         .json('Successfully created index and loaded data into Pinecone.')
+//     } else {
+//       // If the request method is not POST, send a 405 Method Not Allowed status
+//       res.setHeader('Allow', ['POST'])
+//       res.status(405).end(`Method ${req.method} Not Allowed`)
+//     }
+//   } catch (error) {
+//     console.error('Error processing file:', error)
+//     res.status(500).json({ message: 'Internal server error' })
+//   }
+// }
+
 export default async function handler(req, res) {
   try {
     if (req.method === 'POST') {
-      // Get the file from the 'temp' folder
-      const tempDir = path.join(process.cwd(), 'public', 'temp')
-      const file = req.body.file
-      const filePath = path.join(tempDir, file)
+      // Get the direct file path from the request body
+      const filePath = req.body.filePath // Assuming the client sends the file path
 
       // Check if the file exists
       if (!fs.existsSync(filePath)) {
         return res.status(400).json({ message: 'File not found' })
       }
 
-      // Load the file using the appropriate loader
-      const loader = new DirectoryLoader(filePath, {
-        '.txt': path => new TextLoader(path),
-        '.md': path => new TextLoader(path),
-        '.pdf': path => new PDFLoader(path),
-        '.png': path => new UnstructuredLoader(path),
-        '.jpg': path => new UnstructuredLoader(path),
-      })
+      // Load the file using the TextLoader
+      const loader = new TextLoader(filePath)
 
-      const docs = await loader.load()
+      // Load the file content
+      const textContent = fs.readFileSync(filePath, 'utf-8')
+
+      // Create a single document with the file content
+      const doc = {
+        metadata: { source: filePath },
+        pageContent: textContent,
+      }
+
       const vectorDimensions = 1536
 
       const client = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
 
-      // Create Pinecone index and update with docs
+      // Create Pinecone index and update with the document
       await createPineconeIndex(client, indexName, vectorDimensions)
-      await updatePinecone(client, indexName, docs)
+      await updatePinecone(client, indexName, [doc])
 
       // Respond with success message
       res
@@ -141,50 +162,6 @@ export default async function handler(req, res) {
     res.status(500).json({ message: 'Internal server error' })
   }
 }
-
-// export default async function handler(req, res) {
-//   try {
-//     if (req.method === 'POST') {
-//       const { fileUrl } = req.body
-
-//       // Fetch the file content from the provided URL
-//       const fileContent = await fetch(fileUrl).then(res => res.text())
-
-//       // Pass the fileUrl to the DirectoryLoader
-//       const loader = new DirectoryLoader(
-//         fileUrl, // Pass the file content as fileUrl
-//         {
-//           '.txt': path => new TextLoader(path),
-//           '.md': path => new TextLoader(path),
-//           '.pdf': path => new PDFLoader(path),
-//           '.png': path => new UnstructuredLoader(path),
-//           '.jpg': path => new UnstructuredLoader(path),
-//         },
-//       )
-
-//       const docs = await loader.load()
-//       const vectorDimensions = 1536
-
-//       const client = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
-
-//       // Create Pinecone index and update with docs
-//       await createPineconeIndex(client, indexName, vectorDimensions)
-//       await updatePinecone(client, indexName, docs)
-//       // return NextResponse.json({
-//       //   data: 'Successfully created index and loaded data into Pinecone.',
-//       // })
-//       res
-//         .status(200)
-//         .json('Successfully created index and loaded data into Pinecone.')
-//     } else {
-//       // If the request method is not POST, send a 405 Method Not Allowed status
-//       res.setHeader('Allow', ['POST'])
-//       res.status(405).end(`Method ${req.method} Not Allowed`)
-//     }
-//   } catch (error) {
-//     console.error('Error processing file:', error)
-//   }
-// }
 
 const createPineconeIndex = async (client, indexName, vectorDimension) => {
   // 1. Initiate index existence check
