@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Pinecone } from '@pinecone-database/pinecone'
-import { queryPineconeVectorStoreAndQueryLLM } from '../../_utils/pineconeUtils'
+import { queryPineconeVectorStoreAndQueryLLM } from '../../../app/_utils/pineconeUtils.js'
 import { indexName } from '../../../pineconeConfig'
 
 export async function POST(req) {
