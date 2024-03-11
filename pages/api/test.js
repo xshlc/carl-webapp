@@ -20,91 +20,44 @@ import path from 'path'
 
 const upload = multer({ dest: 'uploads/' })
 
-// export default async function handler(req, res) {
-//   try {
-//     if (req.method === 'POST') {
-//       console.log('req.body:', req.body)
-//       console.log('req.file:', req.file)
-//       // Check if the request contains a file
-//       if (!req.file) {
-//         console.error('No file uploaded HERE')
-//         return res.status(400).json({ message: 'No file uploaded' })
-//       }
-
-//       // Get the temporary file path
-//       const tempFilePath = req.file.path
-//       console.log('Temporary file path:', tempFilePath)
-
-//       // Construct the absolute file path relative to the server's root directory
-//       const filePath = path.join(
-//         process.cwd(),
-//         'public',
-//         'temp',
-//         req.file.originalname,
-//       )
-//       console.log('Absolute file path:', filePath)
-
-//       // Move the file to the desired location
-//       fs.renameSync(tempFilePath, filePath)
-
-//       // Log the absolute file path for debugging
-//       console.log('Absolute file path:', filePath)
-
-//       // Proceed with any further processing here
-//       // For example, you can call a function to vectorize and save the file to the Pinecone database
-//       // createPineconeIndex(client, indexName, vectorDimension);
-//       // updatePinecone(client, indexName, docs)
-
-//       // Respond with success message
-//       res.status(200).json({ message: 'File uploaded successfully', filePath })
-//     } else {
-//       // If the request method is not POST, send a 405 Method Not Allowed status
-//       res.setHeader('Allow', ['POST'])
-//       res.status(405).end(`Method ${req.method} Not Allowed`)
-//     }
-//   } catch (error) {
-//     console.error('Error processing file:', error)
-//     res.status(500).json({ message: 'Internal server error' })
-//   }
-// }
-
 export default async function handler(req, res) {
+  const loader = new DirectoryLoader('./public/temp', {
+    '.txt': path => new TextLoader(path),
+    '.md': path => new TextLoader(path),
+    '.pdf': path => new PDFLoader(path),
+    '.png': path => new UnstructuredLoader(path),
+    '.jpg': path => new UnstructuredLoader(path),
+  })
+
+  const docs = await loader.load()
+  const vectorDimensions = 1536
+
+  const client = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
   try {
     if (req.method === 'POST') {
-      const { filePath } = req.body // Assuming the client sends the file path
+      upload.single('file')(req, res, async function (err) {
+        if (err instanceof multer.MulterError) {
+          // A Multer error occurred when uploading.
+          console.error('Multer error:', err)
+          return res.status(400).json({ message: 'File upload failed' })
+        } else if (err) {
+          // An unknown error occurred when uploading.
+          console.error('Unknown error:', err)
+          return res.status(500).json({ message: 'Internal server error' })
+        }
 
-      // Construct the absolute file path relative to the server's root directory
-      const absoluteFilePath = path.join(
-        process.cwd(),
-        'public',
-        'temp',
-        filePath,
-      )
+        // File was uploaded successfully
+        console.log('File uploaded:', req.file)
 
-      // Check if the file exists at the specified path
-      if (!fs.existsSync(absoluteFilePath)) {
-        return res.status(400).json({ message: 'File not found' })
-      }
+        const vectorDimensions = 1536
 
-      // Load the file content
-      const textContent = fs.readFileSync(absoluteFilePath, 'utf-8')
+        // Create Pinecone index and update with the document
+        //await createPineconeIndex(client, indexName, vectorDimensions)
+        //await updatePinecone(client, indexName, doc)
 
-      // Create a single document with the file content
-      const doc = {
-        metadata: { source: absoluteFilePath },
-        pageContent: textContent,
-      }
-
-      const vectorDimensions = 1536
-
-      const client = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
-
-      // Create Pinecone index and update with the document
-      await createPineconeIndex(client, indexName, vectorDimensions)
-      await updatePinecone(client, indexName, [doc])
-
-      // Respond with success message
-      return res.status(200).json({ message: 'File uploaded successfully' })
+        // Respond with success message
+        return res.status(200).json({ message: 'File uploaded successfully' })
+      })
     } else {
       // If the request method is not POST, send a 405 Method Not Allowed status
       res.setHeader('Allow', ['POST'])
