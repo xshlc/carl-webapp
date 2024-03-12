@@ -1,14 +1,18 @@
 ## VDB Branch Logs
 
-Issue 1: Cannot use fileUrl of firebase direct file link Idea: Passing the file
-itself to the POST request function
+1. Cannot use fileUrl of firebase direct file link
 
-Attempt 2: JSON cannot pass an entire file. So the goal is to grab the file from
-the client/browser and download locally. Issue 2: Cannot access `fs` or file
-system to download stuff locally from the client-side Idea: Pass the file from
-the client to the server in a different way than local saves.
+- Idea: Passing the file itself to the POST request function
 
-Attempt 3: Using `multer` to intercept the file from the client side during
+2. JSON cannot pass an entire file. So the goal is to grab the file from the
+   client/browser and download locally.
+
+   - Cannot access `fs` or file system to download stuff locally from the
+     client-side
+   - Idea: Pass the file from the client to the server in a different way than
+     local saves
+
+3. Using `multer` to intercept the file from the client side during
 
 - Multer doesn't directly save files from the browser/client side. Multer
   intercepts a request, parses the incoming form data, and extracts the files,
@@ -16,11 +20,13 @@ Attempt 3: Using `multer` to intercept the file from the client side during
   `multer` needs some sort of boundary http headers. Couldn't figure it out
   so...
 
-Working: `FormData` that's necessary to work with file uploads via HTTP/JSON.
-Successfully prints.
+4. Working: `FormData` that's necessary to work with file uploads via HTTP/JSON.
+   Successfully prints.
 
-Issue 4: Using `formidable` to save file locally from the server side (api
-endpoint side). Issue 4: Another http header boundary issue.
+5. Using `formidable` to save file locally from the server side (api endpoint
+   side).
+
+- Issue 4: Another http header boundary issue.
 
 ## Firebase Setup
 
