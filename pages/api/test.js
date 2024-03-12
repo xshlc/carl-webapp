@@ -57,9 +57,9 @@ export default async function handler(req, res) {
   try {
     if (req.method === 'POST') {
       try {
-        await fs.readdir(path.join(process.cwd() + '/public', '/images'))
+        await fs.readdir(path.join(process.cwd() + '/public', '/temp'))
       } catch (error) {
-        await fs.mkdir(path.join(process.cwd() + '/public', '/images'))
+        await fs.mkdir(path.join(process.cwd() + '/public', '/temp'))
       }
       await readFile(req, true)
       res.json({ done: 'ok' })

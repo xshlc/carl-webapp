@@ -1,3 +1,27 @@
+## VDB Branch Logs
+
+Issue 1: Cannot use fileUrl of firebase direct file link Idea: Passing the file
+itself to the POST request function
+
+Attempt 2: JSON cannot pass an entire file. So the goal is to grab the file from
+the client/browser and download locally. Issue 2: Cannot access `fs` or file
+system to download stuff locally from the client-side Idea: Pass the file from
+the client to the server in a different way than local saves.
+
+Attempt 3: Using `multer` to intercept the file from the client side during
+
+- Multer doesn't directly save files from the browser/client side. Multer
+  intercepts a request, parses the incoming form data, and extracts the files,
+  saving them to the specified destination folder on the server. Issue 3:
+  `multer` needs some sort of boundary http headers. Couldn't figure it out
+  so...
+
+Working: `FormData` that's necessary to work with file uploads via HTTP/JSON.
+Successfully prints.
+
+Issue 4: Using `formidable` to save file locally from the server side (api
+endpoint side). Issue 4: Another http header boundary issue.
+
 ## Firebase Setup
 
 ### Within Firebase on the browser
@@ -16,10 +40,13 @@
 
 1. Inside VS Code or terminal run `npm install firebase`
 2. Create a `next.config.js` file in the root directory of the project
-3. Define all environment variables inside the `next.config.js` to be referenced by `firebaseConfig.js`
-   1. Environment variables values are provided by Firebase in the settings of `carl_app (web)`
+3. Define all environment variables inside the `next.config.js` to be referenced
+   by `firebaseConfig.js`
+   1. Environment variables values are provided by Firebase in the settings of
+      `carl_app (web)`
 
 ### Using Firebase in the code
+
 In JavaScript files, import objects as needed.
 
 Example:
@@ -42,6 +69,7 @@ import { getDatabase, set } from 'firebase/database'
   - Storage bucket - https://firebase.google.com/docs/storage/web/start
 
 ---
+
 ## Next.js Basics
 
 React with a couple new rules:

@@ -60,10 +60,10 @@ function UploadCourseFile({ course }) {
         method: 'POST',
         body: formData,
         // Multipart: Boundary not found
-        // headers: {
-        //   // necessary headers
-        //   'Content-Type': 'multipart/form-data',
-        // },
+        headers: {
+          // necessary headers
+          'Content-Type': 'multipart/form-data',
+        },
       })
 
       // const response = await axios.post('/api/test', formData, {
