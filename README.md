@@ -1,3 +1,33 @@
+# CARL Teachers Admin App
+
+A web portal where teachers can upload lesson material to make the Pi 5 AI device context aware. Teachers can also manage classes and students.
+
+## Preview
+
+The app features a responsive layout.
+
+### Landing Page
+
+![Mobile response view for the landing page](homepage.png)
+
+### Courses Page
+
+![Mobile responsive view for the " My Courses" page](coursespage.png)
+
+### File Upload
+
+The course overview page allows for file uploads.
+
+#### Mobile View
+
+![Mobile responsive view for the manage course and file upload page](manage_web_mobile.png)
+
+### Web View
+
+![Web view for the manage course and file upload page](manage_web.png)
+
+View the app live to see more pages!
+
 ## Firebase Setup
 
 ### Within Firebase on the browser
@@ -20,6 +50,7 @@
    1. Environment variables values are provided by Firebase in the settings of `carl_app (web)`
 
 ### Using Firebase in the code
+
 In JavaScript files, import objects as needed.
 
 Example:
@@ -38,10 +69,11 @@ import { getDatabase, set } from 'firebase/database'
 **References:**
 
 - Firebase Documentation
-  - Database - https://firebase.google.com/docs/database/web/start
-  - Storage bucket - https://firebase.google.com/docs/storage/web/start
+  - Database - <https://firebase.google.com/docs/database/web/start>
+  - Storage bucket - <https://firebase.google.com/docs/storage/web/start>
 
 ---
+
 ## Next.js Basics
 
 React with a couple new rules:
@@ -51,7 +83,7 @@ When naming folder (at least under /app), need to name it something like
 
 JS file start with capital letter like "`Header.js`" for components
 
-### Optional:
+### Optional
 
 Install:
 
