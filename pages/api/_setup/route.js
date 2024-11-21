@@ -7,7 +7,7 @@ import { UnstructuredLoader } from 'langchain/document_loaders/fs/unstructured'
 import {
   createPineconeIndex,
   updatePinecone,
-} from '../../_utils/pineconeUtils.js'
+} from '../../../app/_utils/pineconeUtils.js'
 import { indexName } from '../../../pineconeConfig.js'
 
 export async function POST() {

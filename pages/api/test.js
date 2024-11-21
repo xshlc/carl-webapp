@@ -1,5 +1,5 @@
 // Import the necessary types from 'next'
-import { NextResponse } from 'next/server'
+//import { NextResponse } from 'next/server'
 import { Pinecone } from '@pinecone-database/pinecone'
 import { TextLoader } from 'langchain/document_loaders/fs/text'
 import { DirectoryLoader } from 'langchain/document_loaders/fs/directory'
@@ -10,77 +10,77 @@ import { UnstructuredLoader } from 'langchain/document_loaders/fs/unstructured'
 //   updatePinecone,
 // } from '../../app/_utils/pineconeUtils.js'
 import { indexName, timeout } from '../../pineconeConfig'
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai.js'
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter.js'
+import { OpenAIEmbeddings } from '@langchain/openai'
+import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter'
 // @ts-ignore
-import { NextApiRequest, NextApiResponse } from 'next'
+//import { NextApiRequest, NextApiResponse } from 'next'
+import multer from 'multer'
+//import fs from 'fs'
+import fs from 'fs/promises'
+import path from 'path'
+import { formidable } from 'formidable'
 
-// Define a handler for your API route
-// export default async function handler(req, res) {
-//   try {
-//     // Check if the request method is POST
-//     if (req.method === 'POST') {
-//       // Extract the file URL from the request body
-//       const { fileUrl } = req.body
-//       console.log(fileUrl)
+const upload = multer({ dest: 'uploads/' })
 
-//       // Here, you can add your logic to process the fileUrl
-//       // For example, generating embeddings and storing them
-
-//       // Send a success response
-//       res.status(200).json({ fileUrl })
-//     } else {
-//       // If the request method is not POST, send a 405 Method Not Allowed status
-//       res.setHeader('Allow', ['POST'])
-//       res.status(405).end(`Method ${req.method} Not Allowed`)
-//     }
-//   } catch (error) {
-//     console.error('Error processing file:', error)
-//     res.status(500).json({ error: 'Internal Server Error' })
-//   }
-// }
+const readFile = (req, saveLocally) => {
+  const options = {}
+  if (saveLocally) {
+    //boolean
+    options.uploadDir = path.join(process.cwd(), '/public/images')
+    options.filename = (name, ext, path, form) => {
+      return Date.now().toString() + '_' + path.originalFilename
+    }
+  }
+  options.maxFileSize = 4000 * 1024 * 1024
+  const form = formidable(options)
+  return new Promise((resolve, reject) => {
+    form.parse(req, (err, fields, files) => {
+      if (err) reject(err)
+      resolve({ fields, files })
+    })
+  })
+}
 
 export default async function handler(req, res) {
+  const loader = new DirectoryLoader('./public/temp', {
+    '.txt': path => new TextLoader(path),
+    '.md': path => new TextLoader(path),
+    '.pdf': path => new PDFLoader(path),
+    '.png': path => new UnstructuredLoader(path),
+    '.jpg': path => new UnstructuredLoader(path),
+  })
+
+  const docs = await loader.load()
+  const vectorDimensions = 1536
+
+  const client = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
   try {
     if (req.method === 'POST') {
-      const { fileUrl } = req.body
+      try {
+        await fs.readdir(path.join(process.cwd() + '/public', '/temp'))
+      } catch (error) {
+        await fs.mkdir(path.join(process.cwd() + '/public', '/temp'))
+      }
+      await readFile(req, true)
+      res.json({ done: 'ok' })
+      //console.log('File uploaded:', req.file)
 
-      // Fetch the file content from the provided URL
-      const fileContent = await fetch(fileUrl).then(res => res.text())
-
-      // Pass the fileUrl to the DirectoryLoader
-      const loader = new DirectoryLoader(
-        fileUrl, // Pass the file content as fileUrl
-        {
-          '.txt': path => new TextLoader(path),
-          '.md': path => new TextLoader(path),
-          '.pdf': path => new PDFLoader(path),
-          '.png': path => new UnstructuredLoader(path),
-          '.jpg': path => new UnstructuredLoader(path),
-        },
-      )
-
-      const docs = await loader.load()
       const vectorDimensions = 1536
 
-      const client = new Pinecone({ apiKey: process.env.PINECONE_API_KEY })
+      // Create Pinecone index and update with the document
+      //await createPineconeIndex(client, indexName, vectorDimensions)
+      //await updatePinecone(client, indexName, doc)
 
-      // Create Pinecone index and update with docs
-      await createPineconeIndex(client, indexName, vectorDimensions)
-      await updatePinecone(client, indexName, docs)
-      // return NextResponse.json({
-      //   data: 'Successfully created index and loaded data into Pinecone.',
-      // })
-      res
-        .status(200)
-        .json('Successfully created index and loaded data into Pinecone.')
+      // Respond with success message
+      return res.status(200).json({ message: 'File uploaded successfully' })
     } else {
       // If the request method is not POST, send a 405 Method Not Allowed status
       res.setHeader('Allow', ['POST'])
-      res.status(405).end(`Method ${req.method} Not Allowed`)
+      return res.status(405).end(`Method ${req.method} Not Allowed`)
     }
   } catch (error) {
     console.error('Error processing file:', error)
+    return res.status(500).json({ message: 'Internal server error' })
   }
 }
 

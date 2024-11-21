@@ -11,17 +11,24 @@ import {
 } from 'firebase/storage'
 import { getDatabase, push, set } from 'firebase/database'
 import { getFirestore, doc, setDoc } from 'firebase/firestore'
+//import axios from 'axios'
+//import fs from 'fs'
+// cannot use fs in client side
+// see:
+// https://github.com/vercel/next.js/discussions/54176
 
 function UploadCourseFile({ course }) {
   const [progress, setProgress] = useState()
   const [result, setResult] = useState('')
   const db = getFirestore(app)
   const storage = getStorage(app)
+  const path = require('path')
 
   const uploadFile = file => {
     const metadata = {
       contentType: file.type,
     }
+    console.log(file)
     const storageRef = ref(storage, 'file-upload/' + file?.name)
     const uploadTask = uploadBytesResumable(storageRef, file, metadata)
     uploadTask.on('state_changed', snapshot => {
@@ -35,26 +42,40 @@ function UploadCourseFile({ course }) {
           .then(downloadURL => {
             console.log('File available at', downloadURL)
             saveInfo(file, downloadURL)
-            vectorizeAndSaveFile(downloadURL)
+            vectorizeAndSaveFile(file)
           })
           .catch(error => console.log('Error getting download URL:', error))
     })
   }
 
-  const vectorizeAndSaveFile = async fileUrl => {
+  const vectorizeAndSaveFile = async file => {
     try {
-      // send fileUrl to an api endpoint
+      const formData = new FormData()
+      formData.append('file', file) // Append the file itself
+
+      // log the FormData object to check if the file is appended correctly
+      console.log('FormData:', formData)
+
       const result = await fetch('/api/test', {
         method: 'POST',
+        body: formData,
+        // Multipart: Boundary not found
         headers: {
-          'Content-Type': 'application/json',
+          // necessary headers
+          'Content-Type': 'multipart/form-data',
         },
-        body: JSON.stringify({ fileUrl }),
       })
+
+      // const response = await axios.post('/api/test', formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data',
+      //   },
+      // })
       const json = await result.json()
-      console.log('result: ', json)
+      console.log('result:', json)
+      //console.log('result:', response.data)
     } catch (err) {
-      console.log('err:', err)
+      console.error('Error:', err)
     }
   }
 

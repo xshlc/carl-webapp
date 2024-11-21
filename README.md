@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CARL Teachers Admin App
 
 A web portal where teachers can upload lesson material to make the Pi 5 AI device context aware. Teachers can also manage classes and students.
@@ -27,6 +28,44 @@ The course overview page allows for file uploads.
 ![Web view for the manage course and file upload page](manage_web.png)
 
 View the app live to see more pages!
+=======
+## VDB Branch Logs
+
+1. Cannot use `fileUrl` (firebase direct file link) as a parameter of the
+   function that called the POST request API function
+
+   - Idea: Passing the file itself to the POST request function
+
+2. JSON cannot pass an entire file. So the goal is to grab the file from the
+   client/browser and download locally.
+
+   - Cannot access `fs` or file system to download stuff locally from the
+     client-side
+   - Idea: Pass the file from the client to the server in a different way than
+     local saves (`multer` and `formidable`)
+
+3. Using `multer` to intercept the file from the client side during
+
+   - Multer doesn't directly save files from the browser/client side. Multer
+     intercepts a request, parses the incoming form data, and extracts the
+     files, saving them to the specified destination folder on the server. Issue
+     3: `multer` needs some sort of boundary http headers. Couldn't figure it
+     out so...
+
+4. Working: `FormData` that's necessary to work with file uploads via HTTP/JSON.
+   Successfully prints.
+
+5. Using `formidable` to save file locally from the server side (api endpoint
+   side).
+
+   - Issue 4: Another http header boundary issue.
+
+What to try?
+
+- Fix `formidable`
+- Try downloading from the firebase `fileUrl` from the API function (server-side
+  b/c not allowed on client-side)
+>>>>>>> ae7e7007b609725f0914612ed8c8e7b410dcc485
 
 ## Firebase Setup
 
@@ -46,8 +85,10 @@ View the app live to see more pages!
 
 1. Inside VS Code or terminal run `npm install firebase`
 2. Create a `next.config.js` file in the root directory of the project
-3. Define all environment variables inside the `next.config.js` to be referenced by `firebaseConfig.js`
-   1. Environment variables values are provided by Firebase in the settings of `carl_app (web)`
+3. Define all environment variables inside the `next.config.js` to be referenced
+   by `firebaseConfig.js`
+   1. Environment variables values are provided by Firebase in the settings of
+      `carl_app (web)`
 
 ### Using Firebase in the code
 
